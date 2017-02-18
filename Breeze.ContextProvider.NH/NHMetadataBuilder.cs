@@ -451,6 +451,9 @@ namespace Breeze.ContextProvider.NH
                 var collectionPersister = joinable as AbstractCollectionPersister;
                 if (collectionPersister != null)
                 {
+                    // Bernd S. 18.02.2017: BasicCollectionPersister does not have an ElementPersister
+                    if (collectionPersister.IsManytoMany || collectionPersister.IsOneToMany)
+                    {
                     // many-to-many relationships do not have a direct connection on the client or in metadata
                     var elementPersister = collectionPersister.ElementPersister as AbstractEntityPersister;
                     if (elementPersister != null)
@@ -458,6 +461,7 @@ namespace Breeze.ContextProvider.NH
                         fkNames = GetPropertyNamesForColumns(elementPersister, columnNames);
                         if (fkNames != null)
                             nmap.Add("invForeignKeyNamesOnServer", fkNames);
+                    }
                     }
                 }
             }
